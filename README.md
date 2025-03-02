@@ -1,7 +1,7 @@
 <h1>Ресторан</h1>
 <h2>API:</h2>
-<li><h3>localhost:5000/visitors</h3> - посетители ресторана</li>
-<li><h3>localhost:5000/tables</h3> - столики</li>
+<li><h3>localhost:5000/visitor</h3> - посетители ресторана</li>
+<li><h3>localhost:5000/table</h3> - столики</li>
 <li><h3>localhost:5000/employee</h3> - сотрудники ресторана</li>
 <li><h3>localhost:5000/order</h3> - заказы в ресторане</li>
 <li><h3>localhost:5000/reservation</h3> - резервирование столиков</li>
