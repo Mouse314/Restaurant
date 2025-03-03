@@ -1,4 +1,5 @@
 <h1>Ресторан</h1>
+![ER Diagram](image.png)
 <h2>API:</h2>
 <li><h3>localhost:5000/api/visitor</h3> - посетители ресторана</li>
 <li><h3>localhost:5000/api/table</h3> - столики</li>
