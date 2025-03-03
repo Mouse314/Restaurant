@@ -27,6 +27,44 @@ class employeeController {
         );
         return res.json(employee);
     }
+
+    async update (req, res, next) {
+        try {
+            const {id} = req.params;
+            const employee = await Employee.findByPk(id);
+            if (!employee) return next(ApiError.badRequest(e.message));
+            
+            await employee.update(req.body);
+            return res.json(employee);
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async delete (req, res, next) {
+        try {
+            const {id} = req.params;
+            const employee = await Employee.findByPk(id);
+            if (!employee) return next(ApiError.badRequest(e.message));
+    
+            await employee.destroy();
+            return res.json({"message": `Employee id:${id} successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async deleteAll (req, res, next) {
+        try {
+            await Employee.destroy({where: {}});
+            return res.json({"message": `All creatures successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
 }
 
 module.exports = new employeeController();

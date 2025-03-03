@@ -40,6 +40,44 @@ class orderItemController {
         );
         return res.json(menuItem);
     }
+
+    async update (req, res, next) {
+        try {
+            const {id} = req.params;
+            const orderitem = await OrderItem.findByPk(id);
+            if (!orderitem) return next(ApiError.badRequest(e.message));
+            
+            await orderitem.update(req.body);
+            return res.json(orderitem);
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async delete (req, res, next) {
+        try {
+            const {id} = req.params;
+            const orderitem = await OrderItem.findByPk(id);
+            if (!orderitem) return next(ApiError.badRequest(e.message));
+    
+            await orderitem.destroy();
+            return res.json({"message": `OrderItem id:${id} successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async deleteAll (req, res, next) {
+        try {
+            await OrderItem.destroy({where: {}});
+            return res.json({"message": `All creatures successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
 }
 
 module.exports = new orderItemController();

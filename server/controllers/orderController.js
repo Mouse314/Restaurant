@@ -1,4 +1,4 @@
-const {Order, MenuItem, Payment, Visitor, Table} = require('../models/models');
+const {Order, MenuItem, Payment} = require('../models/models');
 const ApiError = require('../error/ApiError');
 
 class orderController {
@@ -43,6 +43,44 @@ class orderController {
             }
         );
         return res.json(order);
+    }
+
+    async update (req, res, next) {
+        try {
+            const {id} = req.params;
+            const order = await Order.findByPk(id);
+            if (!order) return next(ApiError.badRequest(e.message));
+            
+            await order.update(req.body);
+            return res.json(order);
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async delete (req, res, next) {
+        try {
+            const {id} = req.params;
+            const order = await Order.findByPk(id);
+            if (!order) return next(ApiError.badRequest(e.message));
+    
+            await order.destroy();
+            return res.json({"message": `Order id:${id} successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async deleteAll (req, res, next) {
+        try {
+            await Order.destroy({where: {}});
+            return res.json({"message": `All creatures successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
     }
 }
 

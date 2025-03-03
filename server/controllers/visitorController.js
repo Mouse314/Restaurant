@@ -18,6 +18,7 @@ class visitorController {
         return res.json(visitor);
     }
 
+    
     async getOne(req, res) {
         const {id} = req.params;
         const visitor = await Visitor.findOne(
@@ -30,6 +31,45 @@ class visitorController {
         );
         return res.json(visitor);
     }
+    
+    async update (req, res, next) {
+        try {
+            const {id} = req.params;
+            const visitor = await Visitor.findByPk(id);
+            if (!visitor) return next(ApiError.badRequest(e.message));
+            
+            await visitor.update(req.body);
+            return res.json(visitor);
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async delete (req, res, next) {
+        try {
+            const {id} = req.params;
+            const visitor = await Visitor.findByPk(id);
+            if (!visitor) return next(ApiError.badRequest(e.message));
+    
+            await visitor.destroy();
+            return res.json({"message": `Visitor id:${id} successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async deleteAll (req, res, next) {
+        try {
+            await Visitor.destroy({where: {}});
+            return res.json({"message": `All creatures successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+
 }
 
 module.exports = new visitorController();

@@ -30,6 +30,44 @@ class tableController {
         );
         return res.json(table);
     }
+
+    async update (req, res, next) {
+        try {
+            const {id} = req.params;
+            const table = await Table.findByPk(id);
+            if (!table) return next(ApiError.badRequest(e.message));
+            
+            await table.update(req.body);
+            return res.json(table);
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async delete (req, res, next) {
+        try {
+            const {id} = req.params;
+            const table = await Table.findByPk(id);
+            if (!table) return next(ApiError.badRequest(e.message));
+    
+            await table.destroy();
+            return res.json({"message": `Table id:${id} successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async deleteAll (req, res, next) {
+        try {
+            await Table.destroy({where: {}});
+            return res.json({"message": `All creatures successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
 }
 
 module.exports = new tableController();
