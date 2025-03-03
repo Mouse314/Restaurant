@@ -34,6 +34,44 @@ class paymentController {
         );
         return res.json(payment);
     }
+
+    async update (req, res, next) {
+        try {
+            const {id} = req.params;
+            const payment = await Payment.findByPk(id);
+            if (!payment) return next(ApiError.badRequest(e.message));
+            
+            await payment.update(req.body);
+            return res.json(payment);
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async delete (req, res, next) {
+        try {
+            const {id} = req.params;
+            const payment = await Payment.findByPk(id);
+            if (!payment) return next(ApiError.badRequest(e.message));
+    
+            await payment.destroy();
+            return res.json({"message": `Payment id:${id} successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async deleteAll (req, res, next) {
+        try {
+            await Payment.destroy({where: {}});
+            return res.json({"message": `All creatures successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
 }
 
 module.exports = new paymentController();

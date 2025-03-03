@@ -40,6 +40,44 @@ class recipeItemController {
         );
         return res.json(recipeItem);
     }
+
+    async update (req, res, next) {
+        try {
+            const {id} = req.params;
+            const recipeItem = await RecipeItem.findByPk(id);
+            if (!recipeItem) return next(ApiError.badRequest(e.message));
+            
+            await recipeItem.update(req.body);
+            return res.json(recipeItem);
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async delete (req, res, next) {
+        try {
+            const {id} = req.params;
+            const recipeItem = await RecipeItem.findByPk(id);
+            if (!recipeItem) return next(ApiError.badRequest(e.message));
+    
+            await recipeItem.destroy();
+            return res.json({"message": `RecipeItem id:${id} successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async deleteAll (req, res, next) {
+        try {
+            await RecipeItem.destroy({where: {}});
+            return res.json({"message": `All creatures successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
 }
 
 module.exports = new recipeItemController();

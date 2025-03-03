@@ -38,6 +38,44 @@ class menuitemController {
 
         return res.json(menuitem);
     }
+
+    async update (req, res, next) {
+        try {
+            const {id} = req.params;
+            const menuitem = await MenuItem.findByPk(id);
+            if (!menuitem) return next(ApiError.badRequest(e.message));
+            
+            await menuitem.update(req.body);
+            return res.json(menuitem);
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async delete (req, res, next) {
+        try {
+            const {id} = req.params;
+            const menuitem = await MenuItem.findByPk(id);
+            if (!menuitem) return next(ApiError.badRequest(e.message));
+    
+            await menuitem.destroy();
+            return res.json({"message": `MenuItem id:${id} successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
+    
+    async deleteAll (req, res, next) {
+        try {
+            await MenuItem.destroy({where: {}});
+            return res.json({"message": `All creatures successfully deleted`});
+        }
+        catch (e) {
+            return next(ApiError.badRequest(e.message));
+        }
+    }
 }
 
 module.exports = new menuitemController();
