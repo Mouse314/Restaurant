@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.Component {
+    width: 100vv;
+    height: 100vh;
+    background-color: black;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    position:relative;
+    z-index: 1;
+    background-color: rgb(0, 0, 0);
+    height:auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 4px 100px 100px rgba(0, 0, 0, 1);
+}
+
+.title {
+    margin-left: 10%;
+    color:whitesmoke;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 900;
+    font-stretch:extra-condensed;
+    font-size: 40px;
+}
+
+.right-block {
+    padding: 10px;
+    padding-right: 10%;
+    gap: 10px;
+}
+
+.button-top {
+    margin: 10px;
+    padding: 10px;
+    border: 1px dotted white;
+    transition: .3s ease-in;
+    background:transparent;
+    background-size: 250%;
+    background-image:linear-gradient(to left,black, rgb(255, 255, 255), black, black) ;
+    color:azure;
+}
+.button-top:hover {
+    background-position: right;
+    /* box-shadow: 0px 0px 20px 1px white; */
+    color:black
+}
+
+.main {
+    flex: 1;
+    display: flex;
+}
+
+.footer {
+    background-color: rgb(0, 0, 0);
+    height: 100px;
+}
+
+.aside {
+    padding: 10px;
+    position:relative;
+    z-index: 2;
+    width: 300px;
+    background-color: rgb(0, 0, 0);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.aside-top, .aside-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.aside-top {
+    margin-top: 40px;
+}
+
+.button-aside {
+    transition: .3s ease-in;
+    background:transparent;
+    background-size: 250%;
+    background-image:linear-gradient(to left,black, rgb(255, 255, 255), black, black) ;
+    color:azure;
+    border: none;
+}
+.button-aside:hover {
+    background-position: right;
+    /* box-shadow: 0px 0px 20px 1px white; */
+    color:black
+}
+
+#menu-button {
+    font-size: 30px;
+}
+
+.content {
+    flex: 1;
+    background-image:url("../res/restaurant-interior.jpg");
+    background-repeat:no-repeat;
+    background-size: cover;
+    background-position: center;
+}
