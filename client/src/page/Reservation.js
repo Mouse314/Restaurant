@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Restaurant.css";
 import axios from 'axios';
-import "../styles/Menu.css";
 
 const Menu = () => {
     const [visitorData, setVisitorData] = useState({});

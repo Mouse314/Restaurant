@@ -16,6 +16,7 @@ const AppRouter = () => {
             }
             {[
                 <Route exact key={1} path="/" element={<Restaurant/>}/>,
+                <Route exact key={1} path="/admin" element={<Admin/>}/>,
                 <Route exact key={2} path="/dish/:id" element={<Dish/>}/>,
                 <Route exact key={3} path="/login" element={<Auth/>}/>,
                 <Route exact key={4} path="/registration" element={<Auth/>}/>,

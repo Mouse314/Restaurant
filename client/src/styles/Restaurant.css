@@ -1,6 +1,8 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 18px;
 }
 
 .Component {
@@ -36,6 +38,10 @@
     padding: 10px;
     padding-right: 10%;
     gap: 10px;
+}
+
+button:hover {
+    cursor: pointer;
 }
 
 .button-top {
@@ -109,4 +115,165 @@
     background-repeat:no-repeat;
     background-size: cover;
     background-position: center;
+}
+
+h1 {
+    text-align: center;
+    color: beige;
+    font-size: 50px;
+    position: relative;
+    z-index: 2;
+}
+
+.info {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.block {
+    transition: .4s;
+    color: white;
+    width: 200px;
+    height: 300px;
+    border: 1px solid white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+    background-size: 250%;
+    background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.2),rgba(70, 72, 21, 0.5), rgba(0, 0, 0, 0.2));
+}
+.block:hover {
+    background-position: right;
+}
+
+
+table {
+    padding: 10px;
+    margin: 10px;
+    position: relative;
+    z-index: 2;
+    color: aliceblue;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.compact-table {
+    border-collapse:collapse;
+    margin-left: 0;
+}
+
+tr {
+    transition: .3s;
+    background: transparent;
+    background-size: 250%;
+}
+
+tr:nth-child(even) {
+    background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 1), rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));
+}
+tr:nth-child(odd) {
+    background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 1), rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));
+}
+
+tr:hover {
+    cursor: pointer;
+    background-position: right;
+    color: black;
+}
+
+.ico-option-edit:hover {
+    cursor: pointer;
+    color: rgb(215, 215, 25);
+}
+.ico-option-delete:hover {
+    cursor: pointer;
+    color: red;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.overlay {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation: expand 0.3s ease;
+}
+.overlay.closing {
+    animation: fadeOf 0.3s ease;
+}
+
+.details {
+    padding: 10px;
+    background-color: aqua;
+    width: 70%;
+    height: auto;
+    box-shadow: 28px 23px 24px -1px rgba(0, 199, 255, 0.3);
+}
+
+.details-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-btn {
+    border: 0;
+    color: black;
+    background-color: aqua;
+    height: auto;
+    width: 40%;
+    margin: 10px;
+    padding: 10px;
+}
+
+.close-btn {
+    width: 30px;
+}
+.close-btn:hover {
+    cursor: pointer;
+    color: red;
+}
+
+@keyframes expand {
+    from {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOf {
+    from {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    to {
+        transform: scaleY(0);
+        opacity: 0;
+    }
 }
