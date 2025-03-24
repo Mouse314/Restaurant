@@ -1,0 +1,279 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 18px;
+}
+
+.Component {
+    width: 100vv;
+    height: 100vh;
+    background-color: black;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    position:relative;
+    z-index: 1;
+    background-color: rgb(0, 0, 0);
+    height:auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 4px 100px 100px rgba(0, 0, 0, 1);
+}
+
+.title {
+    margin-left: 10%;
+    color:whitesmoke;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 900;
+    font-stretch:extra-condensed;
+    font-size: 40px;
+}
+
+.right-block {
+    padding: 10px;
+    padding-right: 10%;
+    gap: 10px;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.button-top {
+    margin: 10px;
+    padding: 10px;
+    border: 1px dotted white;
+    transition: .3s ease-in;
+    background:transparent;
+    background-size: 250%;
+    background-image:linear-gradient(to left,black, rgb(255, 255, 255), black, black) ;
+    color:azure;
+}
+.button-top:hover {
+    background-position: right;
+    /* box-shadow: 0px 0px 20px 1px white; */
+    color:black
+}
+
+.main {
+    flex: 1;
+    display: flex;
+}
+
+.footer {
+    background-color: rgb(0, 0, 0);
+    height: 100px;
+}
+
+.aside {
+    padding: 10px;
+    position:relative;
+    z-index: 2;
+    width: 300px;
+    background-color: rgb(0, 0, 0);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.aside-top, .aside-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.aside-top {
+    margin-top: 40px;
+}
+
+.button-aside {
+    transition: .3s ease-in;
+    background:transparent;
+    background-size: 250%;
+    background-image:linear-gradient(to left,black, rgb(255, 255, 255), black, black) ;
+    color:azure;
+    border: none;
+}
+.button-aside:hover {
+    background-position: right;
+    /* box-shadow: 0px 0px 20px 1px white; */
+    color:black
+}
+
+#menu-button {
+    font-size: 30px;
+}
+
+.content {
+    flex: 1;
+    background-image:url("../res/restaurant-interior.jpg");
+    background-repeat:no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+h1 {
+    text-align: center;
+    color: beige;
+    font-size: 50px;
+    position: relative;
+    z-index: 2;
+}
+
+.info {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.block {
+    transition: .4s;
+    color: white;
+    width: 200px;
+    height: 300px;
+    border: 1px solid white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+    background-size: 250%;
+    background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.2),rgba(70, 72, 21, 0.5), rgba(0, 0, 0, 0.2));
+}
+.block:hover {
+    background-position: right;
+}
+
+
+table {
+    padding: 10px;
+    margin: 10px;
+    position: relative;
+    z-index: 2;
+    color: aliceblue;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.compact-table {
+    border-collapse:collapse;
+    margin-left: 0;
+}
+
+tr {
+    transition: .3s;
+    background: transparent;
+    background-size: 250%;
+}
+
+tr:nth-child(even) {
+    background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 1), rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));
+}
+tr:nth-child(odd) {
+    background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 1), rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));
+}
+
+tr:hover {
+    cursor: pointer;
+    background-position: right;
+    color: black;
+}
+
+.ico-option-edit:hover {
+    cursor: pointer;
+    color: rgb(215, 215, 25);
+}
+.ico-option-delete:hover {
+    cursor: pointer;
+    color: red;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.overlay {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation: expand 0.3s ease;
+}
+.overlay.closing {
+    animation: fadeOf 0.3s ease;
+}
+
+.details {
+    padding: 10px;
+    background-color: aqua;
+    width: 70%;
+    height: auto;
+    box-shadow: 28px 23px 24px -1px rgba(0, 199, 255, 0.3);
+}
+
+.details-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-btn {
+    border: 0;
+    color: black;
+    background-color: aqua;
+    height: auto;
+    width: 40%;
+    margin: 10px;
+    padding: 10px;
+}
+
+.close-btn {
+    width: 30px;
+}
+.close-btn:hover {
+    cursor: pointer;
+    color: red;
+}
+
+@keyframes expand {
+    from {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOf {
+    from {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    to {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+}

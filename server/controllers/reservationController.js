@@ -9,7 +9,8 @@ class reservationController {
             return res.json(reservation);
         }
         catch (e) {
-            next(ApiError.badRequest(e.message));
+            console.log(e);
+            // next(ApiError.badRequest(e.message));
         }
     }
 
