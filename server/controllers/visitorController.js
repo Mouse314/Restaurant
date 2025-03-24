@@ -42,7 +42,7 @@ class visitorController {
             return res.json(visitor);
         }
         catch (e) {
-            return next(ApiError.badRequest(e.message));
+            console.log(e);
         }
     }
     
