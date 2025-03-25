@@ -38,7 +38,7 @@ const Visitors = () => {
                 const response = await updateVisitor(editedId, visitorData);
                 alert('Посетитель успешно обновлён');
                 setNewUserForm(null);
-                setVisitorData(null);
+                setVisitorData({});
                 setIsUpdating(null);
                 setEditedId(null);
                 return;
@@ -62,8 +62,7 @@ const Visitors = () => {
     const handleEditClick = async (id) => {
         try {
             const response = await getVisitor(id);
-            
-            setVisitorData(response.data);
+            setVisitorData(response);
             
             setNewUserForm(true);
             setIsUpdating(true);
@@ -169,7 +168,7 @@ const Visitors = () => {
                 </div>
             )}
 
-            {newUserForm && visitorData && (
+            {newUserForm && (
                 <div className="overlay">
                     <div className="details">
                         <div className="details-top">
