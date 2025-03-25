@@ -3,6 +3,10 @@ import {FaEdit, FaTrash, FaTimes} from "react-icons/fa";
 // import "../styles/Restaurant.css";
 import axios from "axios";
 import { getVisitor, getVisitors, updateVisitor, createVisitor, deleteVisitor } from "../http/visitorAPI";
+import Visitor from "../components/Visitor";
+import Table from "../components/Table";
+import DataForm from "../components/DataForm";
+import Deletion from "../components/Deletion";
 
 const Visitors = () => {
     const [data, setData] = useState(null);
@@ -66,6 +70,7 @@ const Visitors = () => {
             
             setNewUserForm(true);
             setIsUpdating(true);
+            
         } catch (error) {
             console.error('Ошибка при получении данных:', error);
         }
@@ -75,11 +80,21 @@ const Visitors = () => {
         try {
             await deleteVisitor(id);
             alert('Посетитель успешно удалён');
+            setNewUserForm(null);
+            setDeletionMode(null);
+            setSelectedId(null);
+            setSelectedUser(null);
             setData(data.filter(el => el.id !== id));
         } catch (e) {
             console.error(e);
             alert('Возникла непредвиденная ошибка при удалении данных. Попробуйте в другой раз');
         }
+    }
+
+    const handleClose = () => {
+        setNewUserForm(null);
+        setIsUpdating(null);
+        setVisitorData({sex: "FEMALE"});
     }
 
     useEffect(() => {
@@ -90,118 +105,53 @@ const Visitors = () => {
     }, []);
 
     return (
+
+        // Список объектов
         <div className="container">
             <h1>Все посетители</h1>
             <button className="create-btn" onClick={() => setNewUserForm(true)}>Добавить посетителя</button>
-            <table>
-                <thead>
-                    <tr>
-                        <td>id</td>
-                        <td>ФИО</td>
-                        <td>телефон</td>
-                        <td>пол</td>
-                        <td>Опции</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data !== null && (data.map((el, ind) => {
-                        return(<React.Fragment key={el.id}>
-                            <tr key={ind}>
-                                <td>{el.id}</td>
-                                <td onClick={() => handleRowClick(el.id)}>{el.name}</td>
-                                <td onClick={() => handleRowClick(el.id)}>{el.phone}</td>
-                                <td onClick={() => handleRowClick(el.id)}>{el.sex}</td>
-                                <td>
-                                    <FaEdit className="ico-option-edit" onClick={() => {setEditedId(el.id); handleEditClick(el.id)}}></FaEdit>
-                                    <FaTrash className="ico-option-delete" onClick={() => handleDeleteClick(el.id)}></FaTrash>
-                                </td>
-                            </tr>
-                        </React.Fragment>)
-                    }))}
-                </tbody>
-            </table>
+            {data && (<Table columns={[["id", "id"],
+                             ["ФИО", "name"],
+                             ["телефон", "phone"],
+                             ["пол", "sex"]]}
+                   data={data}
+                   handleRowClick={handleRowClick}
+                   />)}
+
+            {/* Подробная инфа об объекте */}
             {selectedId && selectedUser && (
-                <div className="overlay">
-                    <div className="details">
-                        <div className="details-top">
-                            <h2>Посетитель</h2>
-                            <FaTimes className="close-btn" onClick={() => setSelectedId(null)}></FaTimes>
-                        </div>
-                        {selectedUser && (<div className="details-data">
-                            <h3>ФИО: {selectedUser.name}</h3>
-                            <h3>Телефон: {selectedUser.phone}</h3>
-                            <h3>Пол: {selectedUser.sex}</h3>
-                            <p>Создан  : {selectedUser.createdAt}</p>
-                            <p>Обновлён: {selectedUser.updatedAt}</p>
-                            <h3>Обслуживание:</h3>
-                            <table className="compact-table">
-                                <thead><tr>
-                                    <td>id заказа:</td>
-                                    <td>id столика:</td>
-                                    <td>время:</td>
-                                </tr></thead>
-                                <tbody>
-                                    {selectedUser.orders.map((el, ind) => {
-                                        return (<tr><td>{el.id}</td>
-                                        <td>{el.tableId}</td>
-                                        <td>{el.datetime}</td></tr>)
-                                    })}
-                                </tbody>
-                            </table>
-                            <h3>Резервы за посетителем:</h3>
-                            <table className="compact-table">
-                                <thead><tr>
-                                    <td>id брони:</td>
-                                    <td>статус:</td>
-                                    <td>время:</td>
-                                </tr></thead>
-                                <tbody>
-                                   {selectedUser.tables.map((el, ind) => {
-                                        return (<tr><td>{el.id}</td>
-                                        <td>{el.reservation.status}</td>
-                                        <td>{el.reservation.datetime}</td></tr>)
-                                    })} 
-                                </tbody>
-                            </table>
-                        </div>)}
-                    </div>
-                </div>
+                <Visitor visitor={selectedUser} 
+                         setSelectedId={setSelectedId}
+                         setEditedId={setEditedId}
+                         handleEditClick={handleEditClick}
+                         setDeletionMode={setDeletionMode}
+                         getVisitor={getVisitor}></Visitor>
             )}
 
-            {newUserForm && (
-                <div className="overlay">
-                    <div className="details">
-                        <div className="details-top">
-                            {isUpdating ? (<h2>Обновить посетителя</h2>) : (<h2>Создать нового посетителя</h2>)}
-                            <FaTimes className="close-btn" onClick={() => setNewUserForm(null)}></FaTimes>
-                        </div>
-                        <form onSubmit={handleSubmit}>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td>Введите ФИО:</td>
-                                        <td><input type="text" id="name" name="name" value={visitorData.name} onChange={handleVisitorChanges}></input></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Введите телефон:</td>
-                                        <td><input type="text" id="phone" name="phone" value={visitorData.phone} onChange={handleVisitorChanges}></input></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Укажите пол:</td>
-                                        <td>
-                                            <select id="sex" name="sex" value={visitorData.sex} onChange={handleVisitorChanges}>
-                                                <option value={"MALE"}>Мужской</option>
-                                                <option value={"FEMALE"}>Женский</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            {isUpdating ? (<button className="button-top" type="submit">Обновить данные</button>) : 
-                                          (<button className="button-top" type="submit">Сохранить данные</button>)}
-                        </form>
-                    </div>
-                </div>
+
+            {/* Обновление / создание нового объекта */}
+            {newUserForm && 
+                <DataForm title={"посетителя"}
+                          onClose={handleClose}
+                          handleSubmit={handleSubmit}
+                          handleChange={handleVisitorChanges}
+                          data={visitorData}
+                          columns={[{text: "Введите ФИО: ", type: "text", name: "name"},
+                                    {text: "Введите телефон: ", type: "text", name: "phone"},
+                                    {text: "Укажите пол: ", type: "select", name:"sex", options: [{value: "MALE", text: "Мужской"}, {value: "FEMALE", text: "Женский"}]}
+                          ]}
+                          isUpdating={isUpdating}></DataForm>
+            }
+
+
+            {/* Удаление объекта */}
+            {deletionMode && (
+                <Deletion title="посетителя"
+                          onClose={setDeletionMode}
+                          obj={deletionMode}
+                          handleDeleteClick={handleDeleteClick}
+                          setDeletionMode={setDeletionMode}></Deletion>
+                
             )}
 
         </div>
