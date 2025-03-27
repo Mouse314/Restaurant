@@ -1,44 +1,43 @@
 import React, { useEffect, useState } from "react";
-import Visitor from "../components/Visitor";
 import Table from "../components/Table";
 import DataForm from "../components/DataForm";
 import Deletion from "../components/Deletion";
 import { createOne, deleteOne, getAll, getOne, updateOne } from "../http/API";
 import RestaurantTable from "../components/RestaurantTable";
-import Tables from "./Tables";
+import Visitors from "./Visitors";
 
-const objName = 'visitor';
+const objName = 'table';
 
-const Visitors = (props) => {
+const Tables = (props) => {
     const [data, setData] = useState(null);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [newUserForm, setNewUserForm] = useState(null);
+    const [selectedTable, setSelectedTable] = useState(null);
+    const [newTableForm, setNewTableForm] = useState(null);
     const [deletionMode, setDeletionMode] = useState(null);
-    const [visitorData, setVisitorData] = useState({sex: 'FEMALE'});
+    const [tableData, setTableData] = useState({});
     const [isUpdating, setIsUpdating] = useState(false);
     const [editedId, setEditedId] = useState(null);
 
     const handleRowClick = (id) => {
         const fetchData = async () => {
-            setSelectedUser(await getOne(objName, id));
+            setSelectedTable(await getOne(objName, id));
         };
         fetchData();
     }
 
-    const handleTableClick = async (id) => {
-        const table = await getOne('table', id);
+    const handleVisitorClick = async (id) => {
+        const visitor = await getOne('visitor', id);
 
-        props.changeContent((<Tables
-            table={table}
+        props.changeContent((<Visitors
+            visitor={visitor}
             changeContent={props.changeContent}>
 
-            </Tables>));
+            </Visitors>));
     }
 
-    const handleVisitorChanges = (e) => {
+    const handleTableChanges = (e) => {
         const {name, value} = e.target;
-        setVisitorData({
-            ...visitorData,
+        setTableData({
+            ...tableData,
             [name]: value
         });
     }
@@ -47,10 +46,10 @@ const Visitors = (props) => {
         e.preventDefault();
         if (isUpdating) {
             try {
-                const response = await updateOne(objName, editedId, visitorData);
-                alert('Посетитель успешно обновлён');
-                setNewUserForm(null);
-                setVisitorData({});
+                const response = await updateOne(objName, editedId, tableData);
+                alert('Столик успешно обновлён');
+                setNewTableForm(null);
+                setTableData({});
                 setIsUpdating(null);
                 setEditedId(null);
                 return;
@@ -61,9 +60,9 @@ const Visitors = (props) => {
         }
         else {
             try {
-                const newVisitor = await createOne(objName, visitorData);
+                const newTable = await createOne(objName, tableData);
                 alert('Посетитель успешно добавлен');
-                setNewUserForm(null);
+                setNewTableForm(null);
             } catch (e) {
                 console.error(e);
                 alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
@@ -74,9 +73,9 @@ const Visitors = (props) => {
     const handleEditClick = async (id) => {
         try {
             const response = await getOne(objName, id);
-            setVisitorData(response);
+            setTableData(response);
             
-            setNewUserForm(true);
+            setNewTableForm(true);
             setIsUpdating(true);
             
         } catch (error) {
@@ -87,10 +86,10 @@ const Visitors = (props) => {
     const handleDeleteClick = async (id) => {
         try {
             await deleteOne(objName, id);
-            alert('Посетитель успешно удалён');
-            setNewUserForm(null);
+            alert('Столик успешно удалён');
+            setNewTableForm(null);
             setDeletionMode(null);
-            setSelectedUser(null);
+            setSelectedTable(null);
             setData(data.filter(el => el.id !== id));
         } catch (e) {
             console.error(e);
@@ -99,13 +98,13 @@ const Visitors = (props) => {
     }
 
     const handleClose = () => {
-        setNewUserForm(null);
+        setNewTableForm(null);
         setIsUpdating(null);
-        setVisitorData({sex: "FEMALE"});
+        setTableData({});
     }
 
     useEffect(() => {
-        if (props.visitor) setSelectedUser(props.visitor);
+        if (props.table) setSelectedTable(props.table);
 
         const fetchData = async () => {
             setData(await getAll(objName));
@@ -117,38 +116,38 @@ const Visitors = (props) => {
 
         // Список объектов
         <div className="container">
-            <h1>Посетители</h1>
-            <button className="create-btn" onClick={() => setNewUserForm(true)}>Добавить посетителя</button>
+            <h1>Столики</h1>
+            <button className="create-btn" onClick={() => setNewTableForm(true)}>Добавить столик</button>
             {data && (<Table columns={[["id", "id"],
-                             ["ФИО", "name"],
-                             ["телефон", "phone"],
-                             ["пол", "sex"]]}
+                             ["номер", "number"],
+                             ["вместимость", "capacity"],
+                             ["статус", "status"]]}
                    data={data}
                    handleRowClick={handleRowClick}
                    />)}
 
             {/* Подробная инфа об объекте */}
-            {selectedUser && (
-                <Visitor visitor={selectedUser} 
-                         setSelectedUser={setSelectedUser}
+            {selectedTable && (
+                <RestaurantTable table={selectedTable}
+                         setSelectedTable={setSelectedTable} 
                          setEditedId={setEditedId}
                          handleEditClick={handleEditClick}
                          setDeletionMode={setDeletionMode}
-                         getVisitor={getOne}
-                         handleTableClick={handleTableClick}></Visitor>
+                         getTable={getOne}
+                         handleVisitorClick={handleVisitorClick}></RestaurantTable>
             )}
 
 
             {/* Обновление / создание нового объекта */}
-            {newUserForm && 
-                <DataForm title={"посетителя"}
+            {newTableForm && 
+                <DataForm title={"столик"}
                           onClose={handleClose}
                           handleSubmit={handleSubmit}
-                          handleChange={handleVisitorChanges}
-                          data={visitorData}
-                          columns={[{text: "Введите ФИО: ", type: "text", name: "name"},
-                                    {text: "Введите телефон: ", type: "text", name: "phone"},
-                                    {text: "Укажите пол: ", type: "select", name:"sex", options: [{value: "MALE", text: "Мужской"}, {value: "FEMALE", text: "Женский"}]}
+                          handleChange={handleTableChanges}
+                          data={tableData}
+                          columns={[{text: "Введите номер столика: ", type: "number", name: "number"},
+                                    {text: "Введите вместимость: ", type: "number", name: "capacity"},
+                                    {text: "Укажите статус: ", type: "select", name:"status", options: [{value: "FREE", text: "Свободен"}, {value: "OCCUPIED", text: "Занят"}, {value: "UNAVAIBLE", text: "Недоступен"}]}
                           ]}
                           isUpdating={isUpdating}></DataForm>
             }
@@ -156,15 +155,16 @@ const Visitors = (props) => {
 
             {/* Удаление объекта */}
             {deletionMode && (
-                <Deletion title="посетителя"
+                <Deletion title="столик"
                           onClose={setDeletionMode}
                           obj={deletionMode}
                           handleDeleteClick={handleDeleteClick}
                           setDeletionMode={setDeletionMode}></Deletion>
                 
             )}
+
         </div>
     );
 };
 
-export default Visitors;
+export default Tables;

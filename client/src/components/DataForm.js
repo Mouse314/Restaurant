@@ -1,6 +1,5 @@
 import React from "react";
 import {FaEdit, FaTrash, FaTimes} from "react-icons/fa";
-import { data } from "react-router-dom";
 
 const DataForm = (props) => {
     return (
