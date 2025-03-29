@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Visitors from "./Visitors";
 import Tables from "./Tables";
 import Orders from "./Orders";
+import Reservations from "./Reservations";
+import Employes from "./Employes";
+import MenuItems from "./MenuItems";
 
 const Admin = () => {
     const navigate = useNavigate();
@@ -28,13 +31,13 @@ const Admin = () => {
                         <button className="button-aside" onClick={() => {setContent(<Tables changeContent={changeContent}></Tables>)}}>Столики</button>  
 
                         <button className="button-aside" onClick={() => {setContent(<Orders changeContent={changeContent}></Orders>)}}>Заказы</button> 
-                        <button className="button-aside">Бронирование</button> 
+                        <button className="button-aside" onClick={() => {setContent(<Reservations changeContent={changeContent}></Reservations>)}}>Бронирование</button> 
 
-                        <button className="button-aside">Меню</button> 
+                        <button className="button-aside" onClick={() => {setContent(<MenuItems changeContent={changeContent}></MenuItems>)}}>Меню</button> 
                         <button className="button-aside">Склад</button> 
 
                         <button className="button-aside">Оплата</button> 
-                        <button className="button-aside">Сотрудники</button> 
+                        <button className="button-aside" onClick={() => {setContent(<Employes changeContent={changeContent}></Employes>)}}>Сотрудники</button> 
                     </div>
                 </div>
                 <div className="content">

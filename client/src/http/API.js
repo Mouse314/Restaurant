@@ -32,10 +32,16 @@ export const createOne = async (objectName, object) => {
     }
 }
 
-export const updateOne = async (objectName, id, newObject) => {
+export const updateOne = async (objectName, id, newObject, headers) => {
     try {
-        const response = await axios.put(serverPath + "/" + objectName + "/" + id, newObject);
-        return response.data;
+        if (headers) {
+            const response = await axios.put(serverPath + "/" + objectName + "/" + id, newObject, headers);
+            return response.data;
+        }
+        else {
+            const response = await axios.put(serverPath + "/" + objectName + "/" + id, newObject);
+            return response.data;
+        }
     } catch (error) {
         console.error('Ошибка при получении данных:', error);
         return null;

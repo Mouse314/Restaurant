@@ -6,17 +6,18 @@ import { createOne, deleteOne, getAll, getOne, updateOne } from "../http/API";
 import RestaurantTable from "../components/RestaurantTable";
 import Visitors from "./Visitors";
 import Order from "../components/Order";
+import Reservation from "../components/Reservation";
 
-const objName = 'order';
+const objName = 'reservation';
 
-const Orders = (props) => {
+const Reservations = (props) => {
     const [data, setData] = useState(null);
     const [visitors, setVisitors] = useState([]);
     const [tables, setTables] = useState([]);
-    const [selectedOrder, setSelectedOrder] = useState(null);
-    const [newOrderForm, setNewOrderForm] = useState(null);
+    const [selectedReservation, setSelectedReservation] = useState(null);
+    const [newReservationForm, setNewReservationForm] = useState(null);
     const [deletionMode, setDeletionMode] = useState(null);
-    const [orderData, setOrderData] = useState({});
+    const [reservationData, setReservationData] = useState({});
     const [isUpdating, setIsUpdating] = useState(false);
     const [editedId, setEditedId] = useState(null);
 
@@ -35,7 +36,7 @@ const Orders = (props) => {
 
                 return(order);
             }).then((result) => {
-                setSelectedOrder(result);
+                setSelectedReservation(result);
             });
         };
         fetchData();
@@ -51,10 +52,10 @@ const Orders = (props) => {
     //         </Visitors>));
     // }
 
-    const handleOrderChanges = (e) => {
+    const handleReservationChanges = (e) => {
         const {name, value} = e.target;
-        setOrderData({
-            ...orderData,
+        setReservationData({
+            ...reservationData,
             [name]: value
         });
     }
@@ -63,10 +64,10 @@ const Orders = (props) => {
         e.preventDefault();
         if (isUpdating) {
             try {
-                const response = await updateOne(objName, editedId, orderData);
-                alert('Заказ успешно обновлён');
-                setNewOrderForm(null);
-                setOrderData({});
+                const response = await updateOne(objName, editedId, reservationData);
+                alert('Бронь успешно обновлена');
+                setNewReservationForm(null);
+                setReservationData({});
                 setIsUpdating(null);
                 setEditedId(null);
                 return;
@@ -77,9 +78,9 @@ const Orders = (props) => {
         }
         else {
             try {
-                const newOrder = await createOne(objName, orderData);
-                alert('Заказ успешно добавлен');
-                setNewOrderForm(null);
+                const newOrder = await createOne(objName, reservationData);
+                alert('Бронь успешно добавлена');
+                setNewReservationForm(null);
             } catch (e) {
                 console.error(e);
                 alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
@@ -90,9 +91,9 @@ const Orders = (props) => {
     const handleEditClick = async (id) => {
         try {
             const response = await getOne(objName, id);
-            setOrderData(response);
+            setReservationData(response);
             
-            setNewOrderForm(true);
+            setNewReservationForm(true);
             setIsUpdating(true);
             
         } catch (error) {
@@ -103,10 +104,10 @@ const Orders = (props) => {
     const handleDeleteClick = async (id) => {
         try {
             await deleteOne(objName, id);
-            alert('Заказ успешно удалён');
-            setNewOrderForm(null);
+            alert('Бронь успешно удалена');
+            setNewReservationForm(null);
             setDeletionMode(null);
-            setSelectedOrder(null);
+            setSelectedReservation(null);
             setData(data.filter(el => el.id !== id));
         } catch (e) {
             console.error(e);
@@ -115,9 +116,9 @@ const Orders = (props) => {
     }
 
     const handleClose = () => {
-        setNewOrderForm(null);
+        setNewReservationForm(null);
         setIsUpdating(null);
-        setOrderData({});
+        setReservationData({});
     }
 
     const getVisitorOptions = () => {
@@ -132,7 +133,7 @@ const Orders = (props) => {
     }
 
     useEffect(() => {
-        if (props.order) setSelectedOrder(props.order);
+        if (props.reservation) setSelectedReservation(props.reservation);
 
         Promise.all([
             new Promise(resolve => resolve(getAll('visitor'))),
@@ -145,18 +146,17 @@ const Orders = (props) => {
 
         const fetchOrdersWithDetails = async () => {
             try {
-                const ordersData = await getAll(objName);
+                const reservationsData = await getAll(objName);
      
-                // Используем await внутри map (через Promise.all)
                 await Promise.all(
-                    ordersData.map(async (order) => {
+                    reservationsData.map(async (reservation) => {
                         const [visitorResponse, tableResponse] = await Promise.all([
-                            new Promise((resolve) => resolve(order.visitorId ? getOne("visitor", order.visitorId) : {name: "Неизвестно"})),
-                            new Promise((resolve) => resolve(order.tableId ? getOne("table", order.tableId) : {number: "Неизвестно"})),
+                            new Promise((resolve) => resolve(reservation.visitorId ? getOne("visitor", reservation.visitorId) : {name: "Неизвестно"})),
+                            new Promise((resolve) => resolve(reservation.tableId ? getOne("table", reservation.tableId) : {number: "Неизвестно"})),
                         ]);
     
                         return {
-                            ...order,
+                            ...reservation,
                             visitorName: visitorResponse.name,
                             tableNumber: tableResponse.number,
                         };
@@ -177,8 +177,8 @@ const Orders = (props) => {
 
         // Список объектов
         <div className="container">
-            <h1>Заказы</h1>
-            <button className="create-btn" onClick={() => setNewOrderForm(true)}>Добавить заказ</button>
+            <h1>Брони</h1>
+            <button className="create-btn" onClick={() => setNewReservationForm(true)}>Добавить бронь</button>
             {data && (<Table columns={[["id", "id"],
                              ["посетитель", "visitorName"],
                              ["столик", "tableNumber"],
@@ -189,25 +189,25 @@ const Orders = (props) => {
                    />)}
 
             {/* Подробная инфа об объекте */}
-            {selectedOrder && (
-                <Order order={selectedOrder}
-                         setSelectedOrder={setSelectedOrder} 
+            {selectedReservation && (
+                <Reservation order={selectedReservation}
+                         setSelectedOrder={setSelectedReservation} 
                          setEditedId={setEditedId}
                          handleEditClick={handleEditClick}
                          setDeletionMode={setDeletionMode}
                          getOrder={getOne}
                          changeContent={props.changeContent}
-                         ></Order>
+                         ></Reservation>
             )}
 
 
             {/* Обновление / создание нового объекта */}
-            {newOrderForm && 
-                <DataForm title={"заказ"}
+            {newReservationForm && 
+                <DataForm title={"бронь"}
                           onClose={handleClose}
                           handleSubmit={handleSubmit}
-                          handleChange={handleOrderChanges}
-                          data={orderData}
+                          handleChange={handleReservationChanges}
+                          data={reservationData}
                           columns={[{text: "Укажите посетителя: ", type: "select", name:"visitorId", options: getVisitorOptions()},
                                     {text: "Укажите столик: ", type: "select", name:"tableId", options: getTablesOptions()},
                                     {text: "Укажите дату и время: ", type: "datetime-local", name: "datetime"},
@@ -219,7 +219,7 @@ const Orders = (props) => {
 
             {/* Удаление объекта */}
             {deletionMode && (
-                <Deletion title="столик"
+                <Deletion title="бронь"
                           onClose={setDeletionMode}
                           obj={deletionMode}
                           handleDeleteClick={handleDeleteClick}
@@ -231,4 +231,4 @@ const Orders = (props) => {
     );
 };
 
-export default Orders;
+export default Reservations;

@@ -16,16 +16,22 @@ const DataForm = (props) => {
                                 if (el.type === "select") {
                                     return (<tr key={ind}>
                                         <td>{el.text}</td>
-                                        <select id={el.id} name={el.name} value={props.data[el.name]} onChange={props.handleChange}>
+                                        <select id={el.name} name={el.name} value={props.data[el.name]} onChange={props.handleChange}>
                                             {el.options.map((opt, ind) => {
                                                 return (<option value={opt.value}>{opt.text}</option>)
                                             })}
                                         </select>
                                     </tr>)
                                 }
+                                else if (el.type === "file") {
+                                    return (<tr key={ind}>
+                                        <td>{el.text}</td>
+                                        <td><input type={el.type} id={el.name} name={el.name} accept={el.accept} onChange={props.handleFileChange}></input></td>
+                                    </tr>)
+                                }
                                 return (<tr key={ind}>
                                     <td>{el.text}</td>
-                                    <td><input type={el.type} id={el.id} name={el.name} value={props.data[el.name]} onChange={props.handleChange}></input></td>
+                                    <td><input type={el.type} id={el.name} name={el.name} value={props.data[el.name]} onChange={props.handleChange}></input></td>
                                 </tr>)
                             })}
                         </tbody>

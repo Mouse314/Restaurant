@@ -15,7 +15,7 @@ class menuitemController {
             return res.json(menuitem);
         }
         catch (e) {
-            next(ApiError.badRequest(e.message));
+            console.error(e);
         }
     }
 

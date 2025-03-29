@@ -1,6 +1,5 @@
 import Admin from "./page/Admin";
 import Auth from "./page/Auth";
-import Dish from "./page/Dish";
 import Restaurant from "./page/Restaurant";
 import { ADMIN_ROUTE, DISH_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, RESTAURANT_ROUTE } from "./utils/consts";
 
@@ -23,9 +22,5 @@ export const publicRoutes = [
     {
         path: REGISTRATION_ROUTE,
         Comment: Auth
-    },
-    {
-        path: DISH_ROUTE + '/:id',
-        Comment: Dish
     }
 ];
