@@ -21,11 +21,20 @@ const MenuItems = (props) => {
     const [editedId, setEditedId] = useState(null);
     const [file, setFile] = useState(null);
 
+    const [newIngredient, setNewIngredient] = useState(null);
+    const [ingredients, setIngredients] = useState(null);
+
     const handleRowClick = (id) => {
         const fetchData = async () => {
             setSelectedMenuItem(await getOne(objName, id));
         };
         fetchData();
+    }
+
+    const getIngredientsOptions = () => {
+        return ingredients.map((el, ind) => {
+            return {value: el.id, text: (el.name + ', в ' + el.unit)}
+        })
     }
 
     const handleOrderClick = async (id) => {
@@ -68,7 +77,30 @@ const MenuItems = (props) => {
         });
     }
 
+    const handleIngredientChanges = (e) => {
+        const {name, value} = e.target;
+        setNewIngredient({
+            ...newIngredient,
+            [name]: value
+        });
+    }
+
+    const handleIngredientSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            console.log(newIngredient);
+            const response = await createOne('recipeitem', {menuitemId: selectedMenuItem.id, quantity: newIngredient.quantity, inventoryId: newIngredient.inventoryId});
+            alert('Ингредиент успешно добавлен к блюду');
+            setNewIngredient(null);
+        } catch (e) {
+            console.error(e);
+            alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
+        }
+    }
+
     const handleSubmit = async (e) => {
+        e.preventDefault();
 
         const formData = new FormData();
 
@@ -80,40 +112,37 @@ const MenuItems = (props) => {
             formData.append('img', file);
 
             resolve(formData)
-        }).then(result => {
-            console.log(menuItemData);
-            console.log(result.name);
-        })
+        }).then(async (result) => {
+            if (isUpdating) {
+                try {
+                    const response = await updateOne(objName, editedId, formData, {
+                        headers: {
+                          'Content-Type': 'multipart/form-data', // Важно для передачи файлов!
+                        },
+                      });
+                    alert('Позиция меню успешно обновлена');
+                    setNewMenuItemForm(null);
+                    setMenuItemData({});
+                    setIsUpdating(null);
+                    setEditedId(null);
+                    return;
+                } catch (e) {
+                    console.error(e);
+                    alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
+                }
+            }
+            else {
+                try {
+                    const newMenuItem = await createOne(objName, formData);
+                    alert('Позиция меню успешно добавлена');
+                    setNewMenuItemForm(null);
+                } catch (e) {
+                    console.error(e);
+                    alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
+                }
+            }
+        });
 
-        e.preventDefault();
-        if (isUpdating) {
-            try {
-                const response = await updateOne(objName, editedId, formData, {
-                    headers: {
-                      'Content-Type': 'multipart/form-data', // Важно для передачи файлов!
-                    },
-                  });
-                alert('Позиция меню успешно обновлена');
-                setNewMenuItemForm(null);
-                setMenuItemData({});
-                setIsUpdating(null);
-                setEditedId(null);
-                return;
-            } catch (e) {
-                console.error(e);
-                alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
-            }
-        }
-        else {
-            try {
-                const newMenuItem = await createOne(objName, menuItemData);
-                alert('Позиция меню успешно добавлена');
-                setNewMenuItemForm(null);
-            } catch (e) {
-                console.error(e);
-                alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
-            }
-        }
     }
 
     const handleEditClick = async (id) => {
@@ -147,10 +176,17 @@ const MenuItems = (props) => {
         setNewMenuItemForm(null);
         setIsUpdating(null);
         setMenuItemData({});
+        setNewIngredient(null);
     }
 
     useEffect(() => {
         if (props.menuitem) setSelectedMenuItem(props.menuitem);
+
+        new Promise(resolve => resolve(getAll('inventory'))).then(result => 
+        {
+            console.log(result);
+            setIngredients(result);
+        });
 
         const fetchData = async () => {
             setData(await getAll(objName));
@@ -162,7 +198,7 @@ const MenuItems = (props) => {
         // Список объектов
         <div className="container">
             <h1>Позиции меню</h1>
-            <button className="create-btn" onClick={() => setNewMenuItemForm(true)}>Позиции меню</button>
+            <button className="create-btn" onClick={() => setNewMenuItemForm(true)}>Добавить позицию меню</button>
             {data && (<Table columns={[["id ", "id"],
                              ["название ", "name"],
                              ["цена ", "price"],
@@ -181,9 +217,21 @@ const MenuItems = (props) => {
                          getMenuItem={getOne}
                          handleTableClick={handleTableClick}
                          handleOrderClick={handleOrderClick}
-                         ></MenuItem>
+                         setNewIngredient={setNewIngredient}></MenuItem>
             )}
 
+            {/* Добавить ингредиент */}
+            {newIngredient && (
+                <DataForm title={"ингредиент"}
+                onClose={handleClose}
+                handleSubmit={handleIngredientSubmit}
+                handleChange={handleIngredientChanges}
+                data={menuItemData}
+                columns={[{text: "Выберите ингредиент: ", type: "select", name: "inventoryId", options: getIngredientsOptions()},
+                          {text: "Укажите количество в ед.изм.: ", type: "number", name: "quantity"},
+                ]}
+                isUpdating={false}></DataForm>
+            )}
 
             {/* Обновление / создание нового объекта */}
             {newMenuItemForm && 

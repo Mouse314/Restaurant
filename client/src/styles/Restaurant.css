@@ -263,6 +263,10 @@ tr:hover {
     color: red;
 }
 
+.photo {
+    width: 100%;
+}
+
 @keyframes expand {
     from {
         transform: scaleY(0);

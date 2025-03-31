@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import {FaEdit, FaTrash, FaTimes} from "react-icons/fa";
+import { deleteOne } from "../http/API";
 
 const MenuItem = (props) => {
+
+    const handleAddIngredientClick = (e) => {
+        props.setNewIngredient({state: true});
+    }
+
+    const handleIngredientDelete = (id) => {
+        console.log('Сработка');
+        new Promise(resolve => resolve(deleteOne('recipeitem', id))).then(result => {
+            console.log(result);
+            props.menuitem.ingredients.filter(el => el.recipeitem.id !== id);
+        });
+    }
+
     return (
         <div className="overlay">
             <div className="details">
@@ -19,6 +33,8 @@ const MenuItem = (props) => {
                     <h3>Описание: {props.menuitem.description}</h3>
                     <h3>Категория: {props.menuitem.category}</h3>
                     <h3>Цена: {props.menuitem.price}</h3>
+                    <h3>Фото: </h3>
+                    <img className="photo" src={"http://localhost:5000/" + props.menuitem.img} alt={"не грузит картинку("}></img>
                     <p>Создан  : {props.menuitem.createdAt}</p>
                     <p>Обновлён: {props.menuitem.updatedAt}</p>
                     <h3>Заказы: </h3>
@@ -44,17 +60,22 @@ const MenuItem = (props) => {
                             <td>ингредиент: </td>
                             <td>количество: </td>
                             <td>единица изм.: </td>
+                            <td>опции: </td>
                         </tr></thead>
                         <tbody>
-                           {props.menuitem.ingredients.map((el, ind) => {
-                                return (<tr key={ind}>
-                                    <td>{el.id}</td>
-                                    <td>{el.name}</td>
-                                    <td>{el.recipeitem.quantity}</td>
-                                    <td>{el.unit}</td></tr>)
-                            })} 
+                                {props.menuitem.ingredients.map((el, ind) => {
+                                    return (
+                                       <tr key={el.id}>
+                                        <td>{el.id}</td>
+                                        <td>{el.name}</td>
+                                        <td>{el.recipeitem.quantity}</td>
+                                        <td>{el.unit}</td>
+                                        <td><FaTrash onClick={() => handleIngredientDelete(el.recipeitem.id)}></FaTrash></td>
+                                    </tr>)
+                                })} 
                         </tbody>
                     </table>
+                    <button className="button-aside" onClick={(e) => handleAddIngredientClick(e)}>Добавить ингредиент</button>
                 </div>)}
             </div>
         </div>
