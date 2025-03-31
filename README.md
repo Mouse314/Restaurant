@@ -22,12 +22,18 @@
     </ul>
   </td>
   <td>
-    
+    <ul>
+      <li><p title="Реактивная разработка и динамический DOM">React.js</p></li>
+      <li><p title="Для общение с сервером">axios</p></li>
+    </ul>
   </td>
 </tr>
 </table>
 <h2>Сущности и связи:</h2>
 <img src="image.png" alt="Логотип">
+<h2>Запуск:</h2>
+<h3>./client: npm run start</h3>
+<h3>./server: npm run dev</h3>
 <h2>API:</h2>
 <ul>
   <li><h3>localhost:5000/api/visitor/{id}</h3> - посетители ресторана</li>
