@@ -11,11 +11,11 @@ class menuitemController {
             const {img} = req.files;
             let filename = uuid.v4() + '.jpg';
             img.mv(path.resolve(__dirname, '..', 'static', filename));
-            const menuitem = await MenuItem.create({name, description, price, category});
+            const menuitem = await MenuItem.create({name, description, price, category, img: filename});
             return res.json(menuitem);
         }
         catch (e) {
-            next(ApiError.badRequest(e.message));
+            console.error(e);
         }
     }
 

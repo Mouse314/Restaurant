@@ -6,39 +6,30 @@ import Deletion from "../components/Deletion";
 import { createOne, deleteOne, getAll, getOne, updateOne } from "../http/API";
 import RestaurantTable from "../components/RestaurantTable";
 import Tables from "./Tables";
+import Employee from "../components/Employee";
 
-const objName = 'visitor';
+const objName = 'employee';
 
-const Visitors = (props) => {
+const Employes = (props) => {
     const [data, setData] = useState(null);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [newUserForm, setNewUserForm] = useState(null);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [newEmployeeForm, setNewEmployeeForm] = useState(null);
     const [deletionMode, setDeletionMode] = useState(null);
-    const [visitorData, setVisitorData] = useState({sex: 'FEMALE'});
+    const [employeeData, setEmployeeData] = useState({sex: 'FEMALE'});
     const [isUpdating, setIsUpdating] = useState(false);
     const [editedId, setEditedId] = useState(null);
 
     const handleRowClick = (id) => {
         const fetchData = async () => {
-            setSelectedUser(await getOne(objName, id));
+            setSelectedEmployee(await getOne(objName, id));
         };
         fetchData();
     }
 
-    const handleTableClick = async (id) => {
-        const table = await getOne('table', id);
-
-        props.changeContent((<Tables
-            table={table}
-            changeContent={props.changeContent}>
-
-            </Tables>));
-    }
-
-    const handleVisitorChanges = (e) => {
+    const handleEmployeeChanges = (e) => {
         const {name, value} = e.target;
-        setVisitorData({
-            ...visitorData,
+        setEmployeeData({
+            ...employeeData,
             [name]: value
         });
     }
@@ -47,10 +38,10 @@ const Visitors = (props) => {
         e.preventDefault();
         if (isUpdating) {
             try {
-                const response = await updateOne(objName, editedId, visitorData);
-                alert('Посетитель успешно обновлён');
-                setNewUserForm(null);
-                setVisitorData({});
+                const response = await updateOne(objName, editedId, employeeData);
+                alert('Сотрудник успешно обновлён');
+                setNewEmployeeForm(null);
+                setEmployeeData({});
                 setIsUpdating(null);
                 setEditedId(null);
                 return;
@@ -61,9 +52,9 @@ const Visitors = (props) => {
         }
         else {
             try {
-                const newVisitor = await createOne(objName, visitorData);
-                alert('Посетитель успешно добавлен');
-                setNewUserForm(null);
+                const newEmployee = await createOne(objName, employeeData);
+                alert('Сотрудник успешно добавлен');
+                setNewEmployeeForm(null);
             } catch (e) {
                 console.error(e);
                 alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
@@ -74,9 +65,9 @@ const Visitors = (props) => {
     const handleEditClick = async (id) => {
         try {
             const response = await getOne(objName, id);
-            setVisitorData(response);
+            setEmployeeData(response);
             
-            setNewUserForm(true);
+            setNewEmployeeForm(true);
             setIsUpdating(true);
             
         } catch (error) {
@@ -87,10 +78,10 @@ const Visitors = (props) => {
     const handleDeleteClick = async (id) => {
         try {
             await deleteOne(objName, id);
-            alert('Посетитель успешно удалён');
-            setNewUserForm(null);
+            alert('Сотрудник успешно удалён');
+            setNewEmployeeForm(null);
             setDeletionMode(null);
-            setSelectedUser(null);
+            setSelectedEmployee(null);
             setData(data.filter(el => el.id !== id));
         } catch (e) {
             console.error(e);
@@ -99,13 +90,13 @@ const Visitors = (props) => {
     }
 
     const handleClose = () => {
-        setNewUserForm(null);
+        setNewEmployeeForm(null);
         setIsUpdating(null);
-        setVisitorData({sex: "FEMALE"});
+        setEmployeeData({});
     }
 
     useEffect(() => {
-        if (props.visitor) setSelectedUser(props.visitor);
+        if (props.visitor) setSelectedEmployee(props.visitor);
 
         const fetchData = async () => {
             setData(await getAll(objName));
@@ -117,38 +108,38 @@ const Visitors = (props) => {
 
         // Список объектов
         <div className="container">
-            <h1>Посетители</h1>
-            <button className="create-btn" onClick={() => setNewUserForm(true)}>Добавить посетителя</button>
+            <h1>Сотрудники</h1>
+            <button className="create-btn" onClick={() => setNewEmployeeForm(true)}>Добавить сотрудника</button>
             {data && (<Table columns={[["id", "id"],
                              ["ФИО", "name"],
-                             ["телефон", "phone"],
-                             ["пол", "sex"]]}
+                             ["должность", "position"],
+                             ["телефон", "phone"]]}
                    data={data}
                    handleRowClick={handleRowClick}
                    />)}
 
             {/* Подробная инфа об объекте */}
-            {selectedUser && (
-                <Visitor visitor={selectedUser} 
-                         setSelectedUser={setSelectedUser}
+            {selectedEmployee && (
+                <Employee employee={selectedEmployee} 
+                         setSelectedEmployee={setSelectedEmployee}
                          setEditedId={setEditedId}
                          handleEditClick={handleEditClick}
                          setDeletionMode={setDeletionMode}
-                         getVisitor={getOne}
-                         handleTableClick={handleTableClick}></Visitor>
+                         getEmployee={getOne}
+                         ></Employee>
             )}
 
 
             {/* Обновление / создание нового объекта */}
-            {newUserForm && 
-                <DataForm title={"посетителя"}
+            {newEmployeeForm && 
+                <DataForm title={"сотрудника"}
                           onClose={handleClose}
                           handleSubmit={handleSubmit}
-                          handleChange={handleVisitorChanges}
-                          data={visitorData}
+                          handleChange={handleEmployeeChanges}
+                          data={employeeData}
                           columns={[{text: "Введите ФИО: ", type: "text", name: "name"},
                                     {text: "Введите телефон: ", type: "text", name: "phone"},
-                                    {text: "Укажите пол: ", type: "select", name:"sex", options: [{value: "MALE", text: "Мужской"}, {value: "FEMALE", text: "Женский"}]}
+                                    {text: "Укажите должность: ", type: "text", name: "position"}
                           ]}
                           isUpdating={isUpdating}></DataForm>
             }
@@ -156,7 +147,7 @@ const Visitors = (props) => {
 
             {/* Удаление объекта */}
             {deletionMode && (
-                <Deletion title="посетителя"
+                <Deletion title="сотрудника"
                           onClose={setDeletionMode}
                           obj={deletionMode}
                           handleDeleteClick={handleDeleteClick}
@@ -167,4 +158,4 @@ const Visitors = (props) => {
     );
 };
 
-export default Visitors;
+export default Employes;

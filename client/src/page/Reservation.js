@@ -75,7 +75,7 @@ const Menu = () => {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="name">ФИО:</label>
-                    <input type="text" id="name" name="name" value={visitorData.value} onChange={handleVisitorChanges}></input>
+                    <input type="text" id="name" name="name" value={visitorData.name} onChange={handleVisitorChanges}></input>
                     <label htmlFor="phone">Номер телефона:</label>
                     <input type="text" id="phone" name="phone" value={visitorData.phone} onChange={handleVisitorChanges}></input>
                     <label htmlFor="sex">Пол:</label>

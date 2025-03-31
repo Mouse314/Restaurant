@@ -27,7 +27,8 @@ const MenuItem = sequelize.define('menuitem', {
     name: {type: DataTypes.STRING, allowNull: false},
     description: {type: DataTypes.STRING, allowNull: false},
     price: {type: DataTypes.INTEGER, allowNull: false},
-    category: {type: DataTypes.STRING}
+    category: {type: DataTypes.STRING},
+    img: {type: DataTypes.STRING, allowNull: true}
 });
 
 const Inventory = sequelize.define('inventory', {
