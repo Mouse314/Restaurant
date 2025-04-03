@@ -20,6 +20,9 @@ const Orders = (props) => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [editedId, setEditedId] = useState(null);
 
+    const [newDish, setNewDish] = useState(null);
+    const [dishes, setDishes] = useState(null);
+
     const handleRowClick = (id) => {
         const fetchData = async () => {
             let order = await getOne(objName, id);
@@ -41,6 +44,12 @@ const Orders = (props) => {
         fetchData();
     }
 
+    const getDishesOptions = () => {
+        return dishes.map((el, ind) => {
+            return {value: el.id, text: (el.name)}
+        })
+    }
+
     // const handleVisitorClick = async (id) => {
     //     const visitor = await getOne('visitor', id);
 
@@ -50,6 +59,28 @@ const Orders = (props) => {
 
     //         </Visitors>));
     // }
+
+    const handleDishChanges = (e) => {
+        const {name, value} = e.target;
+        setNewDish({
+            ...newDish,
+            [name]: value
+        });
+    }
+
+    const handleDishSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            console.log(newDish);
+            const response = await createOne('orderitem', {menuitemId: newDish.menuitemId, quantity: newDish.quantity, orderId: selectedOrder.id});
+            alert('Блюдо успешно добавлено к заказу');
+            setNewDish(null);
+        } catch (e) {
+            console.error(e);
+            alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
+        }
+    }
 
     const handleOrderChanges = (e) => {
         const {name, value} = e.target;
@@ -118,6 +149,7 @@ const Orders = (props) => {
         setNewOrderForm(null);
         setIsUpdating(null);
         setOrderData({});
+        setNewDish(null);
     }
 
     const getVisitorOptions = () => {
@@ -133,6 +165,12 @@ const Orders = (props) => {
 
     useEffect(() => {
         if (props.order) setSelectedOrder(props.order);
+
+        new Promise(resolve => resolve(getAll('menuitem'))).then(result => 
+        {
+            console.log(result);
+            setDishes(result);
+        });
 
         Promise.all([
             new Promise(resolve => resolve(getAll('visitor'))),
@@ -197,6 +235,7 @@ const Orders = (props) => {
                          setDeletionMode={setDeletionMode}
                          getOrder={getOne}
                          changeContent={props.changeContent}
+                         setNewDish={setNewDish}
                          ></Order>
             )}
 
@@ -216,6 +255,18 @@ const Orders = (props) => {
                           isUpdating={isUpdating}></DataForm>
             }
 
+            {/* Добавить блюдо */}
+            {newDish && (
+                <DataForm title={"блюдо"}
+                onClose={handleClose}
+                handleSubmit={handleDishSubmit}
+                handleChange={handleDishChanges}
+                data={orderData}
+                columns={[{text: "Выберите блюдо: ", type: "select", name: "menuitemId", options: getDishesOptions()},
+                          {text: "Укажите количество в ед.изм.: ", type: "number", name: "quantity"},
+                ]}
+                isUpdating={false}></DataForm>
+            )}
 
             {/* Удаление объекта */}
             {deletionMode && (

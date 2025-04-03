@@ -6,6 +6,7 @@ import Orders from "./Orders";
 import Reservations from "./Reservations";
 import Employes from "./Employes";
 import MenuItems from "./MenuItems";
+import Inventory from "./Inventory";
 
 const Admin = () => {
     const navigate = useNavigate();
@@ -34,7 +35,7 @@ const Admin = () => {
                         <button className="button-aside" onClick={() => {setContent(<Reservations changeContent={changeContent}></Reservations>)}}>Бронирование</button> 
 
                         <button className="button-aside" onClick={() => {setContent(<MenuItems changeContent={changeContent}></MenuItems>)}}>Меню</button> 
-                        <button className="button-aside">Склад</button> 
+                        <button className="button-aside" onClick={() => {setContent(<Inventory changeContent={changeContent}></Inventory>)}}>Склад</button> 
 
                         <button className="button-aside">Оплата</button> 
                         <button className="button-aside" onClick={() => {setContent(<Employes changeContent={changeContent}></Employes>)}}>Сотрудники</button> 
