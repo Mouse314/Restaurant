@@ -23,6 +23,8 @@ const Orders = (props) => {
     const [newDish, setNewDish] = useState(null);
     const [dishes, setDishes] = useState(null);
 
+    const [newPayment, setNewPayment] = useState(null);
+
     const handleRowClick = (id) => {
         const fetchData = async () => {
             let order = await getOne(objName, id);
@@ -68,6 +70,10 @@ const Orders = (props) => {
         });
     }
 
+    const handlePaymentAdd = (e, _amount, _orderId) => {
+        setNewPayment({amount : _amount, orderId: _orderId});
+    }   
+
     const handleDishSubmit = async (e) => {
         e.preventDefault();
 
@@ -88,6 +94,27 @@ const Orders = (props) => {
             ...orderData,
             [name]: value
         });
+    }
+    
+    const handlePaymentChanges = (e) => {
+        const {name, value} = e.target;
+        setNewPayment({
+            ...newPayment,
+            [name]: value
+        });
+    }
+
+    const handlePaymentSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await createOne('payment', newPayment);
+            alert('Чек успешно добавлен');
+            setNewPayment(null);
+            return;
+        } catch (e) {
+            console.error(e);
+            alert('Возникла непредвиденная ошибка при добавлении данных. Попробуйте в другой раз');
+        }
     }
 
     const handleSubmit = async (e) => {
@@ -150,6 +177,7 @@ const Orders = (props) => {
         setIsUpdating(null);
         setOrderData({});
         setNewDish(null);
+        setNewPayment(null);
     }
 
     const getVisitorOptions = () => {
@@ -236,6 +264,7 @@ const Orders = (props) => {
                          getOrder={getOne}
                          changeContent={props.changeContent}
                          setNewDish={setNewDish}
+                         handlePaymentAdd={handlePaymentAdd}
                          ></Order>
             )}
 
@@ -251,6 +280,20 @@ const Orders = (props) => {
                                     {text: "Укажите столик: ", type: "select", name:"tableId", options: getTablesOptions()},
                                     {text: "Укажите дату и время: ", type: "datetime-local", name: "datetime"},
                                     {text: "Укажите статус: ", type: "select", name:"status", options: [{value: "CONFIRM", text: "Подтверждён"}, {value: "DENY", text: "Отклонён"}, {value: "INPROCESS", text: "В процессе"}]}
+                          ]}
+                          isUpdating={isUpdating}></DataForm>
+            }
+            
+            {/* Создание оплаты */}
+            {newPayment && 
+                <DataForm title={"чек"}
+                          onClose={handleClose}
+                          handleSubmit={handlePaymentSubmit}
+                          handleChange={handlePaymentChanges}
+                          data={newPayment}
+                          columns={[{text: "Укажите сумму: ", type: "number", name:"amount"},
+                                    {text: "Выберите метод оплаты: ", type: "select", name:"payment_method", options: [{value: "CASH", text: "Наличными"}, {value: "CASHLESS", text: "Безналичными"}]},
+                                    {text: "Укажите дату и время: ", type: "datetime-local", name: "datetime"},
                           ]}
                           isUpdating={isUpdating}></DataForm>
             }

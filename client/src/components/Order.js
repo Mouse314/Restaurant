@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import {FaEdit, FaTrash, FaTimes} from "react-icons/fa";
 import Visitors from "../page/Visitors";
 import Tables from "../page/Tables";
 import { deleteOne } from "../http/API";
 
 const Order = (props) => {
+
+    
 
     const getAmount = () => {
         const amount = props.order.dishes.reduce((acc, cur) => acc + cur.price * cur.orderitem.quantity, 0);
@@ -27,6 +29,14 @@ const Order = (props) => {
 
     const handleAddDishClick = (e) => {
         props.setNewDish({state: true});
+    }
+
+    const handlePaymentDelete = (id) => {
+        new Promise(resolve => resolve(deleteOne('payment', id))).then(result => {
+            console.log(result);
+            alert("Чек успешно удалён");
+            props.order.payment = null;
+        });
     }
 
     const handleDishDelete = (id) => {
@@ -74,8 +84,8 @@ const Order = (props) => {
                             {props.order.dishes.map((el, ind) => {
                                 return (<tr key={ind}><td>{el.id}</td>
                                 <td onClick={() => props.handleDishClick(props.table.order.visitorId)}>{el.name}</td>
-                                <td>{el.price}</td>
                                 <td>{el.category}</td>
+                                <td>{el.price}</td>
                                 <td>{el.orderitem.quantity}</td>
                                 <td><FaTrash onClick={() => handleDishDelete(el.orderitem.id)}></FaTrash></td></tr>)
                             })}
@@ -89,19 +99,24 @@ const Order = (props) => {
 
                     <h3>Оплата:</h3>
 
+                    {!props.order.payment && (
+                        <button className="button-aside" onClick={(e) => props.handlePaymentAdd(e, getAmount(), props.order.id)}>Добавить чек</button>
+                    )}
+
                     {props.order.payment && (<table className="compact-table">
                         <thead><tr>
                             <td>id:</td>
                             <td>сумма:</td>
                             <td>метод оплаты:</td>
                             <td>время:</td>
+                            <td>опции:</td>
                         </tr></thead>
                         <tbody>
                             <tr><td>{props.order.payment.id}</td>
                             <td>{props.order.payment.amount}</td>
                             <td>{props.order.payment.payment_method}</td>
-                            <td>{props.order.payment.datetime}</td></tr>
-                            
+                            <td>{props.order.payment.datetime}</td>
+                            <td><FaTrash onClick={() => handlePaymentDelete(props.order.payment.id)}></FaTrash></td></tr>
                         </tbody>
                     </table>)}
                 </div>)}
