@@ -111,6 +111,8 @@ const MenuItems = (props) => {
             formData.append('price', menuItemData.price);
             formData.append('img', file);
 
+            console.log(file);
+
             resolve(formData)
         }).then(async (result) => {
             if (isUpdating) {
