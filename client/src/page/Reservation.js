@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/Restaurant.css";
 import axios from 'axios';
 
-const Menu = () => {
+const Reservation = () => {
     const [visitorData, setVisitorData] = useState({});
     const [reservationData, setReservationData] = useState({});
     const [tables, setTables] = useState([]);
@@ -100,4 +100,4 @@ const Menu = () => {
     );
 };
 
-export default Menu;
+export default Reservation;

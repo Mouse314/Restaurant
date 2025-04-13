@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import {FaEdit, FaTrash, FaTimes} from "react-icons/fa";
 import Visitors from "../page/Visitors";
 import Tables from "../page/Tables";
-import { deleteOne } from "../http/API";
+import { deleteOne, getOne } from "../http/API";
+import MenuItem from "./MenuItem";
+import MenuItems from "../page/MenuItems";
 
 const Order = (props) => {
 
@@ -25,6 +27,16 @@ const Order = (props) => {
             table={table}
             changeContent={props.changeContent}>
             </Tables>));
+    }
+    
+    const handleDishClick = async (id) => {
+
+        const dish = await getOne('menuitem', 1);
+
+        props.changeContent((<MenuItems
+            menuitem={dish}
+            changeContent={props.changeContent}>
+        </MenuItems>));
     }
 
     const handleAddDishClick = (e) => {
@@ -83,7 +95,7 @@ const Order = (props) => {
                             
                             {props.order.dishes.map((el, ind) => {
                                 return (<tr key={ind}><td>{el.id}</td>
-                                <td onClick={() => props.handleDishClick(props.table.order.visitorId)}>{el.name}</td>
+                                <td onClick={() => handleDishClick(el)}>{el.name}</td>
                                 <td>{el.category}</td>
                                 <td>{el.price}</td>
                                 <td>{el.orderitem.quantity}</td>

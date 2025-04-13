@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../components/AuthContext.js";
 import "../styles/Restaurant.css";
 import Menu from "./Menu";
 import axios from 'axios';
@@ -11,6 +12,25 @@ const Restaurant = () => {
 
     const [content, setContent] = useState(<div>sdhfshdfhsdjfkk</div>);
 
+    const { isAuthenticated, login } = useAuth();
+
+    const handleAdminClick = async () => {
+        if (isAuthenticated) {
+            navigate('/admin');
+        } else {
+            const password = prompt('Введите пароль для доступа к админ-панели:');
+            console.log(password);
+            if (password) {
+                const result = await login(password);
+                if (result.success) {
+                    navigate('/admin');
+                } else {
+                    alert(result.message || 'Ошибка авторизации');
+                }
+          }
+        }
+      };
+
     return (
         <div className="Component">
             <div className="header">
@@ -18,7 +38,7 @@ const Restaurant = () => {
                 <div className="right-block">
                     <button className="button-top">Кнопка 1</button>
                     <button className="button-top">Кнопка 2</button>
-                    <button className="button-top" onClick={() => {navigate('/admin')}}>Админ - панель</button>
+                    <button className="button-top" onClick={handleAdminClick}>Админ - панель</button>
                 </div>
             </div>
             <div className="main">
